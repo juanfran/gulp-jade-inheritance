@@ -19,19 +19,9 @@ var jade = require('gulp-jade');
 
 gulp.task('jade-inheritance', function() {
   gulp.src('/jade/example.jade')
-    .pipe(jadeInheritance())
+    .pipe(jadeInheritance({basedir: '/jade/'}))
     .pipe(jade());
 });
 ```
 
-In this example jade compile `example.jade` and all other files that have been extended or included `example.jade`.
-
-
-You can also set the `basedir` directory
-
-```js
-gulp.task('jade-inheritance', function() {
-  gulp.src('/jade/example.jade')
-    .pipe(jadeInheritance({basedir: '/jade/'}))
-    .pipe(jade());
-});
+In this example jade compile `example.jade` and all other files that have been extended or included `example.jade`. The plugin searches for those dependencies in the `basedir` directory.
