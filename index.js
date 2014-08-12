@@ -16,13 +16,16 @@ function gulpJadeInheritance(options) {
   var files = [];
 
   function writeStream(currentFile) {
-    if (currentFile) {
+    if (currentFile && currentFile.contents.length) {
       var currentFileOptions = _.defaults(options, {'basedir': currentFile.base});
-
       var jadeInheritance = new JadeInheritance(currentFile.path, currentFileOptions.basedir, currentFileOptions);
+      var filepath;
 
       for (var i = 0; i < jadeInheritance.files.length; i++) {
-        files.push(options.basedir + "/" +  jadeInheritance.files[i]);
+        filepath = options.basedir + "/" +  jadeInheritance.files[i];
+        if (_.indexOf(files, filepath) === -1) {
+          files.push(filepath);
+        }
       }
     }
   }
