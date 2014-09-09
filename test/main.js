@@ -67,6 +67,26 @@ describe('gulp-jade-inheritance', function(done) {
     stream.end();
   });
 
+  it('empty jade', function(done) {
+    var fixture = getFixtureFile('fixture5.jade')
+
+    var files = [];
+
+    var stream = plugin();
+    stream
+      .on('data', function (file) {
+        files.push(file);
+      })
+      .once('end', function() {
+        expect(files).to.have.length(0);
+
+        done();
+      });
+
+    stream.write(fixture);
+    stream.end();
+  });
+
   describe('custom basedir', function(done) {
     it('wrong path', function(done) {
       var fixture = getFixtureFile('fixture1.jade')

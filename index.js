@@ -31,15 +31,19 @@ function gulpJadeInheritance(options) {
   }
 
   function endStream() {
-    vfs.src(files)
-      .pipe(es.through(
-        function (f) {
-          stream.emit('data', f);
-        },
-        function () {
-          stream.emit('end');
-        }
+    if (files.length) {
+      vfs.src(files)
+        .pipe(es.through(
+          function (f) {
+            stream.emit('data', f);
+          },
+          function () {
+            stream.emit('end');
+          }
       ));
+    } else {
+      stream.emit('end');
+    }
   }
 
   stream = es.through(writeStream, endStream);
