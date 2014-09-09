@@ -1,6 +1,6 @@
 {
   "name": "gulp-jade-inheritance",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Rebuild only changed jade files and all it dependencies",
   "main": "index.js",
   "scripts": {
