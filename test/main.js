@@ -23,9 +23,9 @@ describe('gulp-jade-inheritance', function(done) {
     var fixture = getFixtureFile('fixture1.jade')
 
     var fileNames = [
-      'fixture1.jade',
-      'fixture2.jade',
-      'fixture3.jade'
+      'test/fixtures/fixture1.jade',
+      'test/fixtures/fixture2.jade',
+      'test/fixtures/fixture3.jade'
     ];
 
     var files = [];
@@ -93,7 +93,7 @@ describe('gulp-jade-inheritance', function(done) {
 
       var files = [];
 
-      var stream = plugin({basedir: 'test/fixtures2'});
+      var stream = plugin({basedir: 'test/fixtures5'});
       stream
         .on('data', function (file) {
           files.push(file);
@@ -127,5 +127,26 @@ describe('gulp-jade-inheritance', function(done) {
       stream.write(fixture);
       stream.end();
     });
+  });
+
+  it('subfolder jade', function(done) {
+    var fixture = getFixtureFile('subfolder/fixture5.jade')
+
+    var files = [];
+
+    var stream = plugin({basedir: 'test/fixtures'});
+    stream
+      .on('data', function (file) {
+        expect(file.base).to.be.eql('test/fixtures');
+        files.push(file);
+      })
+      .once('end', function() {
+        expect(files).to.have.length(1);
+
+        done();
+      });
+
+    stream.write(fixture);
+    stream.end();
   });
 });

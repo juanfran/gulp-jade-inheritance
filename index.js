@@ -17,22 +17,28 @@ function gulpJadeInheritance(options) {
 
   function writeStream(currentFile) {
     if (currentFile && currentFile.contents.length) {
-      var currentFileOptions = _.defaults(options, {'basedir': currentFile.base});
-      var jadeInheritance = new JadeInheritance(currentFile.path, currentFileOptions.basedir, currentFileOptions);
-      var filepath;
-
-      for (var i = 0; i < jadeInheritance.files.length; i++) {
-        filepath = options.basedir + "/" +  jadeInheritance.files[i];
-        if (_.indexOf(files, filepath) === -1) {
-          files.push(filepath);
-        }
-      }
+      files.push(currentFile);
     }
   }
 
   function endStream() {
     if (files.length) {
-      vfs.src(files)
+      var jadeInheritanceFiles = [];
+      var filesPaths = [];
+
+      options = _.defaults(options, {'basedir': process.cwd()});
+
+      _.forEach(files, function(file) {
+        var jadeInheritance = new JadeInheritance(file.path, options.basedir, options);
+
+        var fullpaths = _.map(jadeInheritance.files, function (file) {
+          return options.basedir + "/" +  file;
+        });
+
+        filesPaths = _.union(filesPaths, fullpaths);
+      });
+
+      vfs.src(filesPaths, {'base': options.basedir})
         .pipe(es.through(
           function (f) {
             stream.emit('data', f);
