@@ -40,10 +40,6 @@ var cached = require('gulp-cached');
 var gulpif = require('gulp-if');
 var filter = require('gulp-filter');
 
-gulp.task('watch', ['setWatch', 'jade']);
-gulp.task('setWatch', function() {
-  global.isWatching = true;
-});
 gulp.task('jade', function() {
     return gulp.src('app/**/*.jade')
 
@@ -66,6 +62,12 @@ gulp.task('jade', function() {
 
         //save all the files
         .pipe(gulp.dest('dist'));
+});
+gulp.task('setWatch', function() {
+    global.isWatching = true;
+});
+gulp.task('watch', ['setWatch', 'jade'], function() {
+    //your watch functions...
 });
 ```
 
