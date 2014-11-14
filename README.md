@@ -28,7 +28,7 @@ In this example jade compile `example.jade` and all other files that have been e
 
 ### Only process changed files
 
-You can use `gulp-jade-inheritance` with `gulp-changed` and `gulp-cached` only process the files that have changed.
+You can use `gulp-jade-inheritance` with `gulp-changed` and `gulp-cached` to only process the files that have changed. This also prevent partials from being processed separately by marking them with an underscore before their name.
 
 ```js
 'use strict';
@@ -69,12 +69,17 @@ gulp.task('jade', function() {
 });
 ```
 
-
-To make this work you have to mark partials with an underscore before their name or their parent folder's name. Example structure:
+If you want to prevent partials from being processed, mark them with an underscore before their name or their parent folder's name. Example structure:
 
 ```
 /app/index.jade
 /app/_header.jade
 /app/_partials/article.jade
 /dist/
+```
+
+To install all that's need for it:
+
+```shell
+npm install gulp-jade-inheritance gulp-jade gulp-changed gulp-cached gulp-if gulp-filter --save-dev
 ```
