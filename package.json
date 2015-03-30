@@ -23,7 +23,7 @@
   "homepage": "https://github.com/juanfran/gulp-jade-inheritance",
   "devDependencies": {
     "chai": "~1.9.1",
-    "mocha": "~1.18.2",
+    "mocha": "~2.2.1",
     "proxyquire": "^1.0.1",
     "sinon": "^1.10.2"
   },
