@@ -5,12 +5,12 @@ var _ = require("lodash");
 var vfs = require('vinyl-fs');
 var through2 = require('through2');
 var gutil = require('gulp-util');
-var JadeInheritance = require('jade-inheritance');
-var PLUGIN_NAME = 'gulp-jade-inheritance';
+var sassGraph = require('sass-graph');
+var PLUGIN_NAME = 'gulp-sass-inheritance';
 
 var stream;
 
-function gulpJadeInheritance(options) {
+function gulpSassInheritance(options) {
   options = options || {};
 
   var files = [];
@@ -23,22 +23,24 @@ function gulpJadeInheritance(options) {
 
   function endStream() {
     if (files.length) {
-      var jadeInheritanceFiles = [];
       var filesPaths = [];
-
-      options = _.defaults(options, {'basedir': process.cwd()});
+      var graph = sassGraph.parseDir(options.dir, options)
 
       _.forEach(files, function(file) {
-        var jadeInheritance = new JadeInheritance(file.path, options.basedir, options);
 
-        var fullpaths = _.map(jadeInheritance.files, function (file) {
-          return options.basedir + "/" +  file;
-        });
+        if (graph.index && graph.index[file.path]) {
+          var fullpaths = graph.index[file.path].importedBy;
 
-        filesPaths = _.union(filesPaths, fullpaths);
+          if (options.debug) {
+            console.log('File', file.path);
+            console.log(' - importedBy', fullpaths);
+          }
+          filesPaths = _.union(filesPaths, fullpaths);
+        }
+
       });
 
-      vfs.src(filesPaths, {'base': options.basedir})
+      vfs.src(filesPaths)
         .pipe(es.through(
           function (f) {
             stream.emit('data', f);
@@ -57,4 +59,4 @@ function gulpJadeInheritance(options) {
   return stream;
 };
 
-module.exports = gulpJadeInheritance;
+module.exports = gulpSassInheritance;

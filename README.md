@@ -1,87 +1,59 @@
-#gulp-jade-inheritance
-[![Build Status](https://travis-ci.org/juanfran/gulp-jade-inheritance.svg?branch=master)](https://travis-ci.org/juanfran/gulp-jade-inheritance)
-> Rebuild a jade file with other files that have extended or included those file
+# gulp-sass-inheritance
 
-Inspired by [jade-inheritance](https://github.com/paulyoung/jade-inheritance)
+> Rebuild a sass/scss file with other files that have extended or included those file
+
+Based on [gulp-jade-inheritance](https://github.com/juanfran/gulp-jade-inheritance)
+
+Uses [sass-graph](https://github.com/xzyfer/sass-graph) for the heavy lifting.
 
 ## Install
 
 ```shell
-npm install gulp-jade-inheritance --save-dev
+npm install gulp-sass-inheritance --save
 ```
 
 ## Usage
 
-`gulpfile.js`
-```js
-var jadeInheritance = require('gulp-jade-inheritance');
-var jade = require('gulp-jade');
-
-gulp.task('jade-inheritance', function() {
-  gulp.src('/jade/example.jade')
-    .pipe(jadeInheritance({basedir: '/jade/'}))
-    .pipe(jade());
-});
-```
-
-In this example jade compile `example.jade` and all other files that have been extended or included `example.jade`. The plugin searches for those dependencies in the `basedir` directory.
-
-### Only process changed files
-
-You can use `gulp-jade-inheritance` with `gulp-changed` and `gulp-cached` to only process the files that have changed. This also prevent partials from being processed separately by marking them with an underscore before their name.
+You can use `gulp-sass-inheritance` with `gulp-changed` to only process the files that have changed but also recompile files that import the one that changed.
 
 ```js
 'use strict';
 var gulp = require('gulp');
-var jadeInheritance = require('gulp-jade-inheritance');
-var jade = require('gulp-jade');
-var changed = require('gulp-changed');
+var sassInheritance = require('gulp-sass-inheritance');
+var sass = require('gulp-sass');
 var cached = require('gulp-cached');
 var gulpif = require('gulp-if');
 var filter = require('gulp-filter');
 
-gulp.task('jade', function() {
-    return gulp.src('app/**/*.jade')
+gulp.task('sass', function() {
+    return gulp.src('src/styles/**/*.scss')
 
-        //only pass unchanged *main* files and *all* the partials
-        .pipe(changed('dist', {extension: '.html'}))
+      //filter out unchanged scss files, only works when watching
+      .pipe(gulpif(global.isWatching, cached('sass')))
 
-        //filter out unchanged partials, but it only works when watching
-        .pipe(gulpif(global.isWatching, cached('jade')))
+      //find files that depend on the files that have changed
+      .pipe(sassInheritance({dir: 'src/styles/'}))
 
-        //find files that depend on the files that have changed
-        .pipe(jadeInheritance({basedir: 'app'}))
+      //filter out internal imports (folders and files starting with "_" )
+      .pipe(filter(function (file) {
+        return !/\/_/.test(file.path) || !/^_/.test(file.relative);
+      }))
 
-        //filter out partials (folders and files starting with "_" )
-        .pipe(filter(function (file) {
-            return !/\/_/.test(file.path) || !/^_/.test(file.relative);
-        }))
+      //process scss files
+      .pipe(sass())
 
-        //process jade templates
-        .pipe(jade())
-
-        //save all the files
-        .pipe(gulp.dest('dist'));
+      //save all the files
+      .pipe(gulp.dest('dist'));
 });
 gulp.task('setWatch', function() {
     global.isWatching = true;
 });
-gulp.task('watch', ['setWatch', 'jade'], function() {
+gulp.task('watch', ['setWatch', 'sass'], function() {
     //your watch functions...
 });
 ```
 
-If you want to prevent partials from being processed, mark them with an underscore before their name or their parent folder's name. Example structure:
 
-```
-/app/index.jade
-/app/_header.jade
-/app/_partials/article.jade
-/dist/
-```
+## License
 
-To install all that's need for it:
-
-```shell
-npm install gulp-jade-inheritance gulp-jade gulp-changed gulp-cached gulp-if gulp-filter --save-dev
-```
+MIT
