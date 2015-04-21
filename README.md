@@ -54,7 +54,7 @@ gulp.task('jade', function() {
 
         //filter out partials (folders and files starting with "_" )
         .pipe(filter(function (file) {
-            return !/\/_/.test(file.path) || !/^_/.test(file.relative);
+            return !/\/_/.test(file.path) && !/^_/.test(file.relative);
         }))
 
         //process jade templates
