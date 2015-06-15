@@ -1,6 +1,6 @@
 {
   "name": "gulp-jade-inheritance",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Rebuild only changed jade files and all it dependencies",
   "main": "index.js",
   "scripts": {
@@ -22,17 +22,17 @@
   },
   "homepage": "https://github.com/juanfran/gulp-jade-inheritance",
   "devDependencies": {
-    "chai": "~1.9.1",
-    "mocha": "~2.2.1",
-    "proxyquire": "^1.0.1",
-    "sinon": "^1.10.2"
+    "chai": "~3.0.0",
+    "mocha": "~2.2.5",
+    "proxyquire": "^1.5.0",
+    "sinon": "^1.15.3"
   },
   "dependencies": {
-    "event-stream": "^3.1.7",
-    "gulp-util": "^3.0.0",
+    "event-stream": "^3.3.1",
+    "gulp-util": "^3.0.5",
     "jade-inheritance": "^0.2.0",
-    "lodash": "^2.4.1",
-    "through2": "^0.6.0",
-    "vinyl-fs": "^0.3.6"
+    "lodash": "^3.9.3",
+    "through2": "^2.0.0",
+    "vinyl-fs": "^1.0.0"
   }
 }
