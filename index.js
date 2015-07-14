@@ -27,17 +27,18 @@ function gulpSassInheritance(options) {
       var graph = sassGraph.parseDir(options.dir, options)
 
       _.forEach(files, function(file) {
-
+        var fullpaths = [];
+        
         if (graph.index && graph.index[file.path]) {
-          var fullpaths = graph.index[file.path].importedBy;
+          fullpaths = graph.index[file.path].importedBy;
 
           if (options.debug) {
             console.log('File', file.path);
             console.log(' - importedBy', fullpaths);
           }
-          filesPaths = _.union(filesPaths, fullpaths);
         }
-
+    	  fullpaths.push(file.path); // add file itself
+        filesPaths = _.union(filesPaths, fullpaths);
       });
 
       vfs.src(filesPaths)
