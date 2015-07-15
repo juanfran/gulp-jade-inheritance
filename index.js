@@ -21,6 +21,7 @@ function gulpSassInheritance(options) {
   }
 
   function endStream() {
+    var stream = this;
     if (files.length) {
       var allPaths = _.pluck(files, 'path');
       var graph = sassGraph.parseDir(options.dir, options);
