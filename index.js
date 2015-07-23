@@ -37,6 +37,7 @@ function gulpSassInheritance(options) {
                 cwd: file.cwd,
                 base: file.base,
                 path: path,
+                stat: fs.statSync(path),
                 contents: fs.readFileSync(path)
               }));
             }
