@@ -29,7 +29,13 @@ function gulpJadeInheritance(options) {
       options = _.defaults(options, {'basedir': process.cwd()});
 
       _.forEach(files, function(file) {
-        var jadeInheritance = new JadeInheritance(file.path, options.basedir, options);
+        try {
+          var jadeInheritance = new JadeInheritance(file.path, options.basedir, options);
+        } catch (e) {
+          var err = new gutil.PluginError(PLUGIN_NAME, e);
+          stream.emit("error", err);
+          return;
+        }
 
         var fullpaths = _.map(jadeInheritance.files, function (file) {
           return options.basedir + "/" +  file;
