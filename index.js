@@ -9,6 +9,7 @@ var JadeInheritance = require('jade-inheritance');
 var PLUGIN_NAME = 'gulp-jade-inheritance';
 
 var stream;
+var errors = {};
 
 function gulpJadeInheritance(options) {
   options = options || {};
@@ -32,6 +33,21 @@ function gulpJadeInheritance(options) {
         try {
           var jadeInheritance = new JadeInheritance(file.path, options.basedir, options);
         } catch (e) {
+          // prevent multiple errors on the same file
+          var alreadyShown;
+          if (errors[e.message]) {
+            alreadyShown = true;
+          }
+
+          clearTimeout(errors[e.message]);
+          errors[e.message] = setTimeout(function () {
+            delete errors[e.message];
+          }, 500); //debounce
+
+          if (alreadyShown) {
+            return;
+          }
+
           var err = new gutil.PluginError(PLUGIN_NAME, e);
           stream.emit("error", err);
           return;
