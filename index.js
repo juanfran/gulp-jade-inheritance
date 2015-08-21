@@ -1,9 +1,8 @@
 'use strict';
 
 var es = require('event-stream');
-var _ = require("lodash");
-var vfs = require('vinyl-fs');
-var through2 = require('through2');
+var _ = require('lodash');
+var fs = require('fs');
 var gutil = require('gulp-util');
 var sassGraph = require('sass-graph');
 var PLUGIN_NAME = 'gulp-sass-inheritance';
@@ -22,25 +21,36 @@ function gulpSassInheritance(options) {
   }
 
   function endStream() {
+    var stream = this;
     if (files.length) {
-      var filesPaths = [];
-      var graph = sassGraph.parseDir(options.dir, options)
-
+      var allPaths = _.pluck(files, 'path');
+      var graph = sassGraph.parseDir(options.dir, options);
+      var newFiles = files;
       _.forEach(files, function(file) {
-
         if (graph.index && graph.index[file.path]) {
           var fullpaths = graph.index[file.path].importedBy;
+
+          fullpaths.forEach(function (path) {
+            if (!_.include(allPaths, path)) {
+              allPaths.push(path);
+              newFiles.push(new gutil.File({
+                cwd: file.cwd,
+                base: file.base,
+                path: path,
+                stat: fs.statSync(path),
+                contents: fs.readFileSync(path)
+              }));
+            }
+          });
 
           if (options.debug) {
             console.log('File', file.path);
             console.log(' - importedBy', fullpaths);
           }
-          filesPaths = _.union(filesPaths, fullpaths);
         }
 
       });
-
-      vfs.src(filesPaths)
+      es.readArray(files)
         .pipe(es.through(
           function (f) {
             stream.emit('data', f);
@@ -57,6 +67,6 @@ function gulpSassInheritance(options) {
   stream = es.through(writeStream, endStream);
 
   return stream;
-};
+}
 
 module.exports = gulpSassInheritance;
