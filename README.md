@@ -85,3 +85,8 @@ To install all that's need for it:
 ```shell
 npm install gulp-jade-inheritance gulp-jade gulp-changed gulp-cached gulp-if gulp-filter --save-dev
 ```
+
+### jade >= 1.11
+
+if your using jade 1.11 add `"jade": "^1.11.0"` to your `package.json` to overwrite the jade-inheritance version. [Issue](https://github.com/paulyoung/jade-inheritance/issues/15)
+
