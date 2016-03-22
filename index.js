@@ -60,15 +60,19 @@ function gulpJadeInheritance(options) {
         filesPaths = _.union(filesPaths, fullpaths);
       });
 
-      vfs.src(filesPaths, {'base': options.basedir})
-        .pipe(es.through(
-          function (f) {
-            stream.emit('data', f);
-          },
-          function () {
-            stream.emit('end');
-          }
-      ));
+      if(filesPaths.length) {
+        vfs.src(filesPaths, {'base': options.basedir})
+          .pipe(es.through(
+            function (f) {
+              stream.emit('data', f);
+            },
+            function () {
+              stream.emit('end');
+            }
+        ));
+      } else {
+        stream.emit('end');
+      }
     } else {
       stream.emit('end');
     }
