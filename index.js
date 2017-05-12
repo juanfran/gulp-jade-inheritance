@@ -11,6 +11,9 @@ var stream;
 
 function gulpSassInheritance(options) {
   options = options || {};
+  if (typeof options.dir !== 'string') {
+    throw new Error('gulp-sass-inheritance: Missing dir in options');
+  }
 
   var files = [];
 
