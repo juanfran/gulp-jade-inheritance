@@ -1,7 +1,7 @@
 # gulp-sass-inheritance
 
 [![npm](https://img.shields.io/npm/v/gulp-sass-inheritance.svg)]([![npm](https://img.shields.io/npm/dm/gulp-sass-inheritance.svg)](https://www.npmjs.com/package/gulp-sass-inheritance)) [![npm](https://img.shields.io/npm/dm/gulp-sass-inheritance.svg)](https://www.npmjs.com/package/gulp-sass-inheritance) ![travis](https://api.travis-ci.org/berstend/gulp-sass-inheritance.svg?branch=master)
-
+![deps](https://david-dm.org/berstend/gulp-sass-inheritance.svg)
 
 > Rebuild a sass/scss file with other files that have imported this file
 
