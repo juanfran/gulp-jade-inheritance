@@ -35,7 +35,7 @@ function gulpSassInheritance(options) {
   function endStream() {
     var stream = this;
     if (files.length) {
-      var allPaths = _.pluck(files, 'path');
+      var allPaths = _.map(files, 'path');
       var graph = sassGraph.parseDir(options.dir, options);
       var newFiles = files;
       _.forEach(files, function(file) {
@@ -43,7 +43,7 @@ function gulpSassInheritance(options) {
           var fullpaths = recureOnImports([],graph, file.path);
 
           fullpaths.forEach(function (path) {
-            if (!_.include(allPaths, path)) {
+            if (!_.includes(allPaths, path)) {
               allPaths.push(path);
               newFiles.push(new gutil.File({
                 cwd: file.cwd,
