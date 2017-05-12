@@ -13,7 +13,7 @@ Useful when working on a larger project: Styles can be (re-)built incrementally 
 ## Changelog
 
 
-#### v1.1 (2017-05-13)
+#### v1.1.0 (2017-05-13)
 
 * **The file initially emitted is now being passed through as well**
 * **Support for nested imports** - Thanks [@safareli](https://github.com/safareli)! Fixes [#3](https://github.com/berstend/gulp-sass-inheritance/issues/3) [#5](https://github.com/berstend/gulp-sass-inheritance/issues/5)
