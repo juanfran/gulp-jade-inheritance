@@ -20,6 +20,15 @@ function gulpSassInheritance(options) {
     }
   }
 
+  function recureOnImports(acc,graph,filePath){
+    var fullpaths = graph.index[filePath].importedBy
+    return fullpaths.reduce(function(acc,thePath){
+      return acc.concat(thePath, graph.index[thePath].importedBy.reduce(function(acc, aPath){
+        return acc.concat(aPath, recureOnImports([], graph, aPath))
+      },[]))
+    },acc)
+  }
+
   function endStream() {
     var stream = this;
     if (files.length) {
@@ -28,7 +37,7 @@ function gulpSassInheritance(options) {
       var newFiles = files;
       _.forEach(files, function(file) {
         if (graph.index && graph.index[file.path]) {
-          var fullpaths = graph.index[file.path].importedBy;
+          var fullpaths = recureOnImports([],graph, file.path);
 
           fullpaths.forEach(function (path) {
             if (!_.include(allPaths, path)) {
